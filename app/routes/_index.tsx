@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 
 import { CandyPay } from "@candypay/checkout-sdk";
-import { Form, redirect } from "@remix-run/react";
+import { Form, redirect, useNavigation } from "@remix-run/react";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 
@@ -54,6 +54,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
   return (
     <div
       className="grid justify-center w-full gap-4"
@@ -63,10 +65,14 @@ export default function Index() {
       <Card className="w-[350px]">
         <CardContent>
           <Form id="pay-form" method="post">
-            <div className="grid w-full items-center gap-4">
-              <img src={imgURL} alt="solana shades" />
-              <Button type="submit">Buy your Solana Shades</Button>
-            </div>
+            <fieldset disabled={isSubmitting}>
+              <div className="grid w-full items-center gap-4">
+                <img src={imgURL} alt="solana shades" />
+                <Button type="submit">
+                  {isSubmitting ? "Loading..." : "Buy your Solana Shades"}
+                </Button>
+              </div>
+            </fieldset>
           </Form>
         </CardContent>
       </Card>
